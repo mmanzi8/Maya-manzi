@@ -25,18 +25,27 @@
       <nav class="nav-menu" id="navMenu" aria-label="Main Navigation">
         <ul class="nav-links">
           <li><a href="#home" class="nav-link active">Home</a></li>
+          <li><a href="#ai-presenter" class="nav-link">AI Guide</a></li>
+          <li><a href="#projects" class="nav-link">Projects</a></li>
+          <li><a href="#digital-citizenship" class="nav-link">Digital Citizen</a></li>
           <li><a href="#about" class="nav-link">About Me</a></li>
           <li><a href="#education" class="nav-link">Education</a></li>
           <li><a href="#skills" class="nav-link">Skills</a></li>
-          <li><a href="#projects" class="nav-link">Projects</a></li>
           <li><a href="#security" class="nav-link">Security</a></li>
           <li><a href="#ai" class="nav-link">AI</a></li>
           <li><a href="#contact" class="nav-link">Contact</a></li>
-          <li><a href="https://web-sparkle-studio-263.lovable.app" class="nav-link" target="_blank" rel="noopener noreferrer">Live Site</a></li>
+          <li><a href="storage.html" class="nav-link" style="color:#38bdf8;font-weight:700">💾 Digital Storage</a></li>
         </ul>
       </nav>
 
       <div class="nav-actions">
+        <!-- Cozy Music Toggle Button -->
+        <button id="cozyMusicNavBtn" class="btn btn-outline btn-sm cozy-nav-btn" title="Toggle Slow-Paced Cozy Lo-Fi Music">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13M9 9l12-2M6 18a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+          <span>Cozy Music</span>
+          <span id="cozyNavBadge" class="nav-cozy-badge">OFF</span>
+        </button>
+
         <!-- Site Blueprint / Site Map Modal Trigger -->
         <button id="blueprintBtn" class="btn btn-outline btn-sm" title="View Website Title, Purpose, Target Audience &amp; Site Map">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
@@ -88,15 +97,15 @@
           </div>
 
           <div class="hero-cta-group">
+            <a href="digital-citizen.html" class="btn btn-cyber">
+              <span>Digital Citizen Guide 🌐</span>
+            </a>
             <a href="#about" class="btn btn-primary">
               <span>About My Journey</span>
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
-            <a href="#skills" class="btn btn-cyber">
+            <a href="#skills" class="btn btn-ai">
               <span>Skills in Progress</span>
-            </a>
-            <a href="#contact" class="btn btn-ai">
-              <span>Get in Touch</span>
             </a>
             <button id="heroBlueprintBtn" class="btn btn-outline">
               <span>Inspect Site Map</span>
@@ -143,6 +152,156 @@
               <p><span class="t-prompt">$</span> echo $READY_TO_LEARN</p>
               <p class="t-output">true</p>
               <p class="t-cursor"><span class="t-prompt">$</span> <span class="blink">_</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1.5 AI AGENT VIDEO PRESENTER SECTION -->
+    <section id="ai-presenter" class="section ai-presenter-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-badge ai-badge">🤖 Interactive Video Tour</span>
+          <h2 class="section-title">Maya's AI Agent Presenter</h2>
+          <p class="section-description">
+            Watch &amp; listen to Maya's AI Digital Avatar explain what is on this portfolio website and introduce her future planned projects.
+          </p>
+        </div>
+
+        <div class="ai-presenter-card card">
+          <!-- Video Presenter Header -->
+          <div class="presenter-top-bar">
+            <div class="agent-status-tag" id="agentStatusTag">
+              <span class="status-pulse-dot"></span>
+              <span id="agentStatusText">AI AGENT READY</span>
+            </div>
+            <div class="presenter-chapter-indicator" id="presenterChapterIndicator">
+              Chapter 1 of 4: Website Overview
+            </div>
+          </div>
+
+          <div class="presenter-body-grid">
+            <!-- Left: Video Avatar Player -->
+            <div class="avatar-player-column">
+              <div class="avatar-video-wrapper" id="avatarVideoWrapper">
+                <!-- Avatar Frame Image -->
+                <img src="assets/maya-avatar.jpg" alt="Maya Manzi AI Agent Avatar" class="avatar-image" id="avatarImage">
+                
+                <!-- Lip Sync & Glowing Ring Overlay -->
+                <div class="avatar-voice-ring" id="avatarVoiceRing"></div>
+
+                <!-- Equalizer Spectrum Bars -->
+                <div class="audio-spectrum-bars" id="audioSpectrumBars">
+                  <span class="bar b1"></span>
+                  <span class="bar b2"></span>
+                  <span class="bar b3"></span>
+                  <span class="bar b4"></span>
+                  <span class="bar b5"></span>
+                  <span class="bar b6"></span>
+                  <span class="bar b7"></span>
+                  <span class="bar b8"></span>
+                </div>
+
+                <!-- Video Badge -->
+                <div class="video-live-badge">
+                  <span class="live-dot"></span> LIVE PRESENTATION
+                </div>
+              </div>
+
+              <!-- Controls Bar -->
+              <div class="avatar-controls-bar">
+                <button id="aiPlayPauseBtn" class="btn btn-primary btn-sm btn-icon-text">
+                  <svg class="icon play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <svg class="icon pause-icon hidden" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                  <span id="aiPlayPauseText">Play Presentation</span>
+                </button>
+
+                <button id="aiNextChapterBtn" class="btn btn-outline btn-sm btn-icon-text" title="Jump to Next Chapter">
+                  <span>Next Chapter</span>
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+
+                <button id="aiMuteBtn" class="btn-icon" title="Toggle AI Speech Audio Mute">
+                  <svg class="icon volume-on-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <svg class="icon volume-off-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
+                </button>
+
+                <button id="aiSubtitlesToggleBtn" class="btn-icon active" title="Toggle Live Captions">
+                  <span style="font-weight: bold; font-size: 0.75rem;">CC</span>
+                </button>
+              </div>
+
+              <!-- Live Captions / Subtitles Overlay -->
+              <div class="subtitles-box" id="aiSubtitlesBox">
+                <p class="subtitle-text" id="aiSubtitleText">"Hi! I'm Maya's AI Agent avatar. Click Play Presentation to start the video tour!"</p>
+              </div>
+            </div>
+
+            <!-- Right: Interactive Chapter Navigator & Future Projects Roadmap -->
+            <div class="presenter-info-column">
+              <!-- Chapter Selector Buttons -->
+              <div class="chapter-tabs-container">
+                <span class="tabs-header-label">PRESENTATION CHAPTERS:</span>
+                <div class="chapter-tabs-grid">
+                  <button class="chapter-tab active" data-chapter="0">
+                    <span class="chap-num">01</span>
+                    <span class="chap-name">🌐 Website Tour &amp; Purpose</span>
+                  </button>
+                  <button class="chapter-tab" data-chapter="1">
+                    <span class="chap-num">02</span>
+                    <span class="chap-name">📚 CS 125 Growth &amp; Skills</span>
+                  </button>
+                  <button class="chapter-tab" data-chapter="2">
+                    <span class="chap-num">03</span>
+                    <span class="chap-name">🌿 Featured: TopicTree AI</span>
+                  </button>
+                  <button class="chapter-tab" data-chapter="3">
+                    <span class="chap-num">04</span>
+                    <span class="chap-name">🚀 Future Projects Roadmap</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Script Display Card -->
+              <div class="script-display-box">
+                <h4 class="script-title" id="aiChapterTitle">Chapter 1: Website Tour &amp; Purpose</h4>
+                <div class="script-content" id="aiScriptContent">
+                  <p>
+                    Welcome to my Digital Citizen Portfolio at <code>mmanziantigravity.netlify.app</code>! I created this site for my CS 125 course at Caldwell University. It showcases my background, core tech skills in progress, hands-on security audits, and interactive AI applications.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Future Projects Roadmap Grid -->
+              <div class="future-roadmap-box">
+                <h4 class="roadmap-heading">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span>Future Planned Projects Roadmap</span>
+                </h4>
+                <div class="roadmap-cards-grid">
+                  <div class="roadmap-card active-card">
+                    <div class="card-badge live">LIVE NOW</div>
+                    <h5>🌿 TopicTree AI Explorer</h5>
+                    <p>Interactive educational tree that branches into related sub-topics &amp; questions on any subject.</p>
+                  </div>
+                  <div class="roadmap-card">
+                    <div class="card-badge planned">PLANNED</div>
+                    <h5>🛡️ Cybersecurity Threat Simulator</h5>
+                    <p>Interactive browser game teaching real-world phishing detection, password strength &amp; malware prevention.</p>
+                  </div>
+                  <div class="roadmap-card">
+                    <div class="card-badge planned">PLANNED</div>
+                    <h5>👣 Digital Footprint Privacy Auditor</h5>
+                    <p>Self-assessment tool that scores social media privacy checkups and active vs. passive footprint exposure.</p>
+                  </div>
+                  <div class="roadmap-card">
+                    <div class="card-badge planned">PLANNED</div>
+                    <h5>🎓 Smart Campus AI Companion</h5>
+                    <p>AI-powered study guide assistant tailored to Caldwell University CS 125 coursework and tech literacy.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -520,6 +679,130 @@
               </div>
             </div>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5.5 DIGITAL CITIZENSHIP SECTION (CS 125 CORE MODULE) -->
+    <section id="digital-citizenship" class="section digital-citizenship-section" style="background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-badge ai-badge">🌐 CS 125 Core Module</span>
+          <h2 class="section-title">Digital Citizenship Guide</h2>
+          <p class="section-description">
+            Exploring what it means to be a digital citizen, student online behavior, digital footprints, and why digital citizenship is important.
+          </p>
+        </div>
+
+        <!-- 4 Questions Grid Layout -->
+        <div class="about-grid" style="grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 28px;">
+          
+          <!-- Question 1: What is a Digital Citizen? -->
+          <div class="card" style="padding: 28px; border: 1.5px solid rgba(0, 240, 255, 0.25);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <span class="section-badge" style="margin: 0;">Question 01</span>
+              <span style="font-size: 1.4rem;">🌐</span>
+            </div>
+            <h3 style="font-size: 1.35rem; color: var(--accent-cyber); margin-bottom: 12px;">What is a Digital Citizen?</h3>
+            <p style="margin-bottom: 12px; font-size: 0.95rem; color: var(--text-primary); line-height: 1.65;">
+              A <strong>Digital Citizen</strong> is a person who uses information technology, the internet, and digital devices safely, responsibly, legally, and ethically to communicate, learn, work, and participate in society.
+            </p>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
+              Just as physical citizenship involves obeying community standards and showing respect to others, digital citizenship means navigating online spaces with critical thinking, ethical integrity, and digital literacy.
+            </p>
+            <div class="skills-grid" style="grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
+              <div style="background: var(--bg-subtle); padding: 10px 12px; border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary);">
+                <strong style="color: var(--text-primary); display: block;">💡 Digital Literacy</strong> Evaluating online data &amp; facts.
+              </div>
+              <div style="background: var(--bg-subtle); padding: 10px 12px; border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary);">
+                <strong style="color: var(--text-primary); display: block;">🛡️ Online Safety</strong> Passkeys, MFA &amp; anti-phishing.
+              </div>
+              <div style="background: var(--bg-subtle); padding: 10px 12px; border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary);">
+                <strong style="color: var(--text-primary); display: block;">⚖️ Integrity</strong> Proper citation &amp; ethical AI.
+              </div>
+              <div style="background: var(--bg-subtle); padding: 10px 12px; border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary);">
+                <strong style="color: var(--text-primary); display: block;">🤝 Empathy</strong> Respectful digital conduct.
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 2: How Should Students Behave Online? -->
+          <div class="card" style="padding: 28px; border: 1.5px solid rgba(168, 85, 247, 0.25);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <span class="section-badge ai-badge" style="margin: 0;">Question 02</span>
+              <span style="font-size: 1.4rem;">🎓</span>
+            </div>
+            <h3 style="font-size: 1.35rem; color: var(--accent-ai); margin-bottom: 12px;">How Should Students Behave Online?</h3>
+            <p style="margin-bottom: 12px; font-size: 0.95rem; color: var(--text-primary); line-height: 1.65;">
+              College students should follow positive netiquette guidelines, respect course discussion members, and maintain academic integrity when using digital tools and AI.
+            </p>
+            <div class="conduct-checklist" style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+              <div class="card-subtle" style="padding: 10px 12px; font-size: 0.84rem; display: flex; align-items: center; gap: 8px;">
+                <span style="color: var(--accent-success); font-weight: bold;">✓</span>
+                <span><strong>Respectful Communication:</strong> Avoid toxic language, shouting, or harassment.</span>
+              </div>
+              <div class="card-subtle" style="padding: 10px 12px; font-size: 0.84rem; display: flex; align-items: center; gap: 8px;">
+                <span style="color: var(--accent-success); font-weight: bold;">✓</span>
+                <span><strong>Ethical AI Usage:</strong> Use AI as a study guide, verify facts, and cite sources.</span>
+              </div>
+              <div class="card-subtle" style="padding: 10px 12px; font-size: 0.84rem; display: flex; align-items: center; gap: 8px;">
+                <span style="color: var(--accent-success); font-weight: bold;">✓</span>
+                <span><strong>Credential Hygiene:</strong> Use strong passkeys &amp; MFA for student accounts.</span>
+              </div>
+              <div class="card-subtle" style="padding: 10px 12px; font-size: 0.84rem; display: flex; align-items: center; gap: 8px;">
+                <span style="color: var(--accent-success); font-weight: bold;">✓</span>
+                <span><strong>Think Before Sharing:</strong> Remember online posts can be permanent.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 3: What is a Digital Footprint? -->
+          <div class="card" style="padding: 28px; border: 1.5px solid rgba(16, 185, 129, 0.25);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <span class="section-badge" style="margin: 0; background: rgba(16, 185, 129, 0.15); color: var(--accent-success);">Question 03</span>
+              <span style="font-size: 1.4rem;">👣</span>
+            </div>
+            <h3 style="font-size: 1.35rem; color: var(--accent-success); margin-bottom: 12px;">What is a Digital Footprint?</h3>
+            <p style="margin-bottom: 12px; font-size: 0.95rem; color: var(--text-primary); line-height: 1.65;">
+              A <strong>Digital Footprint</strong> is the trail of data left behind whenever you use the internet. It includes websites visited, emails sent, photos uploaded, and information submitted online.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+              <div style="background: var(--bg-subtle); border-left: 3px solid var(--accent-cyber); padding: 8px 12px; font-size: 0.84rem;">
+                <strong style="color: var(--accent-cyber);">Active Footprint:</strong> Intentional posts, comments, photos, uploaded files, and online forms.
+              </div>
+              <div style="background: var(--bg-subtle); border-left: 3px solid var(--accent-ai); padding: 8px 12px; font-size: 0.84rem;">
+                <strong style="color: var(--accent-ai);">Passive Footprint:</strong> Server logs, IP addresses, tracking cookies, and device telemetry.
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 4: Why is Digital Citizenship Important? -->
+          <div class="card" style="padding: 28px; border: 1.5px solid rgba(245, 158, 11, 0.25);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <span class="section-badge" style="margin: 0; background: rgba(245, 158, 11, 0.15); color: var(--accent-warning);">Question 04</span>
+              <span style="font-size: 1.4rem;">⭐</span>
+            </div>
+            <h3 style="font-size: 1.35rem; color: var(--accent-warning); margin-bottom: 12px;">Why is Digital Citizenship Important?</h3>
+            <p style="margin-bottom: 12px; font-size: 0.95rem; color: var(--text-primary); line-height: 1.65;">
+              Digital citizenship protects personal security against identity theft and phishing, unlocks career &amp; academic opportunities, and prevents online harm like cyberbullying.
+            </p>
+            <div class="card-subtle" style="background: var(--bg-subtle); border-left: 4px solid var(--accent-warning); padding: 10px 14px; font-size: 0.84rem; margin-top: 10px;">
+              <strong style="color: var(--text-primary); display: block; margin-bottom: 2px;">Portfolio Summary:</strong>
+              "As a student at Caldwell University taking CS 125, I am committed to using technology responsibly, protecting privacy, verifying information, and using AI ethically."
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Callout Banner to Full Dedicated Page -->
+        <div class="card" style="padding: 20px 24px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h4 style="font-size: 1.1rem; color: var(--text-primary);">Want to explore the complete interactive guide &amp; quiz?</h4>
+            <p style="font-size: 0.86rem; color: var(--text-secondary);">Check out the dedicated Digital Citizen module page with interactive self-assessments.</p>
+          </div>
+          <a href="digital-citizen.html" class="btn btn-cyber btn-sm">
+            <span>Open Dedicated Guide Page ➔</span>
+          </a>
         </div>
       </div>
     </section>
@@ -1007,6 +1290,38 @@
         <button id="modalCloseAction" class="btn btn-primary">Close Blueprint</button>
       </div>
     </div>
+  </div>
+
+  <!-- Cozy Ambient Music Player Floating Widget -->
+  <div id="cozyMusicWidget" class="cozy-music-widget">
+    <div class="cozy-widget-card" id="cozyWidgetCard">
+      <div class="cozy-widget-header">
+        <div class="cozy-title-group">
+          <span class="cozy-icon">☕</span>
+          <div>
+            <span class="cozy-label">Cozy Lo-Fi Ambience</span>
+            <span class="cozy-status-text" id="cozyStatusText">Paused • Click to Play</span>
+          </div>
+        </div>
+        <button id="cozyCloseBtn" class="cozy-close-btn" title="Minimize Cozy Player">&times;</button>
+      </div>
+      <div class="cozy-widget-body">
+        <div class="cozy-controls">
+          <button id="cozyPlayPauseBtn" class="btn btn-cyber btn-sm">
+            <span id="cozyBtnIcon">▶</span>
+            <span id="cozyBtnText">Play Music</span>
+          </button>
+          <div class="cozy-volume-group">
+            <span class="volume-icon">🔊</span>
+            <input type="range" id="cozyVolumeSlider" min="0" max="1" step="0.05" value="0.5" title="Volume">
+          </div>
+        </div>
+      </div>
+    </div>
+    <button id="cozyToggleFab" class="cozy-toggle-fab" title="Toggle Cozy Lo-Fi Music Player">
+      <span class="fab-icon">☕</span>
+      <span class="fab-pulse"></span>
+    </button>
   </div>
 
   <script src="script.js"></script>

@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Storage Guide | Maya Manzi - CS 125</title>
+<meta name="description" content="Comprehensive guide to digital storage: HDD, SSD, USB, cloud storage with interactive tools, music player, live map, weather, chatbot, videos and quiz.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --nav:#050d1a;--bg0:#050d1a;--bg1:#0a1628;--bg2:#1e3a5f;--bg3:#2d5a8e;
+  --blue:#2563eb;--blue2:#3b82f6;--blue3:#38bdf8;--blue-g:rgba(37,99,235,0.15);
+  --white:#ffffff;--g100:#f0f4f8;--g200:#e2e8f0;--g300:#cbd5e1;--g500:#64748b;--g700:#334155;
+  --green:#10b981;--amber:#f59e0b;--red:#ef4444;--purple:#8b5cf6;
+  --ff:'Inter',system-ui,sans-serif;--ffm:'Fira Code',monospace;
+  --r8:8px;--r12:12px;--r16:16px;--r24:24px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:68px}
+body{font-family:var(--ff);background:var(--bg0);color:var(--white);overflow-x:hidden;line-height:1.6}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+.hidden{display:none!important}
+img{max-width:100%;display:block}
+
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+.section{padding:80px 0}
+.section-alt{background:var(--bg1)}
+
+/* NAV */
+#mainNav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(5,13,26,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(37,99,235,0.25);height:64px;display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;max-width:1200px;margin:0 auto;padding:0 16px}
+.nav-brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.92rem;white-space:nowrap;flex-shrink:0}
+.nav-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--blue),var(--blue3));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.nav-scroll{display:flex;gap:2px;overflow-x:auto;flex:1;justify-content:center}
+.nav-scroll::-webkit-scrollbar{display:none}
+.nav-l{padding:5px 11px;font-size:.76rem;color:var(--g300);border-radius:99px;cursor:pointer;white-space:nowrap;background:none;border:1px solid transparent;transition:.2s}
+.nav-l:hover,.nav-l.active{background:var(--blue-g);border-color:rgba(37,99,235,.4);color:var(--blue3)}
+.nav-back{font-size:.76rem;color:var(--blue3);border:1px solid rgba(56,189,248,.3);padding:5px 11px;border-radius:99px;transition:.2s;white-space:nowrap;flex-shrink:0}
+.nav-back:hover{background:rgba(56,189,248,.1)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:var(--r12);font-size:.88rem;font-weight:600;cursor:pointer;border:none;transition:.2s}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue2)}
+.btn-outline{background:transparent;border:1px solid var(--blue);color:var(--blue3)}.btn-outline:hover{background:var(--blue-g)}
+.btn-ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--g300)}.btn-ghost:hover{border-color:var(--blue);color:#fff}
+.btn-sm{padding:6px 14px;font-size:.8rem}
+
+/* CARD */
+.card{background:var(--bg2);border:1px solid rgba(45,90,142,.4);border-radius:var(--r24);padding:22px;transition:.25s}
+.card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 8px 30px rgba(37,99,235,.2)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:.7rem;font-weight:700;font-family:var(--ffm)}
+.b-blue{background:rgba(37,99,235,.15);color:var(--blue3);border:1px solid rgba(37,99,235,.3)}
+.b-green{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3)}
+.b-amber{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.b-purple{background:rgba(139,92,246,.12);color:var(--purple);border:1px solid rgba(139,92,246,.3)}
+
+/* TYPOGRAPHY */
+.sec-label{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue3);font-family:var(--ffm);margin-bottom:8px;display:block}
+.sec-title{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:800;margin-bottom:10px}
+.sec-sub{color:var(--g300);font-size:.95rem;max-width:580px}
+
+/* ====== HERO ====== */
+.hero{padding:120px 0 76px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 100% 70% at 50% 0%,rgba(37,99,235,.12),transparent 70%);pointer-events:none}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:99px;font-size:.76rem;color:var(--blue3);font-family:var(--ffm);margin-bottom:18px}
+.dot-pulse{width:7px;height:7px;border-radius:50%;background:var(--blue3);animation:dp 1.4s ease-in-out infinite}
+@keyframes dp{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:800;margin-bottom:14px;line-height:1.2}
+.hero h1 span{background:linear-gradient(135deg,var(--blue3),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-desc{color:var(--g300);max-width:600px;font-size:1rem;margin-bottom:26px}
+.hero-btns{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px}
+.hero-stats{display:flex;gap:28px;flex-wrap:wrap}
+.h-stat strong{display:block;font-size:1.4rem;color:var(--blue3)}
+.h-stat span{font-size:.78rem;color:var(--g500)}
+
+/* ====== STORAGE CARDS ====== */
+.storage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-top:30px}
+.st-card{background:var(--bg1);border:1px solid rgba(45,90,142,.35);border-radius:var(--r24);padding:20px;transition:.25s;cursor:default}
+.st-card:hover{border-color:var(--blue2);transform:translateY(-3px);box-shadow:0 10px 35px rgba(37,99,235,.18)}
+.st-icon{width:46px;height:46px;border-radius:var(--r12);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:12px}
+.ic-blue{background:rgba(37,99,235,.2)}.ic-green{background:rgba(16,185,129,.2)}.ic-amber{background:rgba(245,158,11,.15)}.ic-purple{background:rgba(139,92,246,.15)}
+.st-card h3{font-size:1rem;margin-bottom:7px}
+.st-card p{font-size:.82rem;color:var(--g300);margin-bottom:12px;line-height:1.5}
+.st-specs{display:flex;flex-direction:column;gap:4px}
+.st-row{display:flex;justify-content:space-between;font-size:.74rem}
+.st-row .lbl{color:var(--g500)}.st-row .val{color:var(--blue3);font-family:var(--ffm)}
+
+/* ====== COMPARISON ====== */
+.cmp-ctrls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.cmp-lbl{display:flex;align-items:center;gap:6px;padding:6px 13px;background:var(--bg1);border:1px solid rgba(45,90,142,.4);border-radius:99px;font-size:.78rem;cursor:pointer;transition:.2s}
+.cmp-lbl:hover{border-color:var(--blue)}.cmp-lbl input{accent-color:var(--blue)}
+.tbl-wrap{overflow-x:auto;border-radius:var(--r16);border:1px solid rgba(45,90,142,.4)}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:.83rem}
+.cmp-tbl th{background:var(--bg2);padding:11px 14px;text-align:left;font-size:.72rem;color:var(--blue3);font-family:var(--ffm);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(45,90,142,.4);white-space:nowrap}
+.cmp-tbl td{padding:10px 14px;border-bottom:1px solid rgba(45,90,142,.2);color:var(--g300)}
+.cmp-tbl tr:last-child td{border-bottom:none}
+.cmp-tbl tr:hover td{background:rgba(37,99,235,.05)}
+.cmp-tbl td:first-child{font-weight:600;color:#fff}
+.spd-wrap{display:flex;align-items:center;gap:7px}
+.spd-bar{height:5px;background:var(--bg2);border-radius:3px;flex:1;overflow:hidden;min-width:50px}
+.spd-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue3));border-radius:3px}
+.stars{color:var(--amber);letter-spacing:1px}
+
+/* ====== TOOLS ====== */
+.tool-tabs{display:flex;gap:4px;background:var(--bg1);border:1px solid rgba(45,90,142,.3);border-radius:var(--r16);padding:5px;margin-bottom:22px;flex-wrap:wrap}
+.tool-tab{padding:8px 18px;border-radius:var(--r12);font-size:.83rem;font-weight:600;cursor:pointer;border:none;background:none;color:var(--g300);transition:.2s}
+.tool-tab.active{background:var(--blue);color:#fff}
+.tool-panel{display:none}.tool-panel.active{display:block}
+
+/* Calculator */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:650px){.calc-grid{grid-template-columns:1fr}}
+.ci-group{margin-bottom:14px}
+.ci-group label{display:block;font-size:.8rem;color:var(--g300);margin-bottom:5px}
+.ci{width:100%;padding:9px 13px;background:var(--bg1);border:1px solid rgba(45,90,142,.4);border-radius:var(--r12);color:#fff;font-size:.88rem;outline:none;transition:.2s}
+.ci:focus{border-color:var(--blue)}
+.calc-out{background:var(--bg1);border:1px solid rgba(37,99,235,.3);border-radius:var(--r24);padding:18px}
+.c-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(45,90,142,.2)}
+.c-row:last-child{border-bottom:none}
+.c-row span{font-size:.83rem;color:var(--g300)}
+.c-row strong{font-size:.95rem;color:var(--blue3);font-family:var(--ffm)}
+
+/* Recommender */
+.rec-opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:18px}
+.rec-opt{padding:14px;background:var(--bg1);border:2px solid rgba(45,90,142,.3);border-radius:var(--r16);text-align:center;cursor:pointer;transition:.2s}
+.rec-opt.sel{border-color:var(--blue);background:rgba(37,99,235,.1)}
+.rec-opt-icon{font-size:1.7rem;margin-bottom:5px}
+.rec-opt span{font-size:.78rem;color:var(--g300);display:block}
+.rec-box{background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(56,189,248,.05));border:1px solid rgba(37,99,235,.3);border-radius:var(--r24);padding:22px;margin-top:18px}
+.rec-box h4{margin-bottom:8px;color:var(--blue3)}
+.rec-box p{font-size:.86rem;color:var(--g300);margin-bottom:12px}
+.rec-chips{display:flex;flex-wrap:wrap;gap:6px}
+.rec-chip{padding:4px 11px;background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.3);border-radius:99px;font-size:.76rem;color:var(--blue3)}
+
+/* Quiz */
+.q-prog{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.q-pb{flex:1;height:5px;background:var(--bg1);border-radius:3px;overflow:hidden}
+.q-pf{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue3));transition:width .4s}
+.q-question{font-size:1.02rem;font-weight:600;margin-bottom:18px;line-height:1.5}
+.q-opts{display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.q-opt{padding:12px 16px;background:var(--bg1);border:2px solid rgba(45,90,142,.3);border-radius:var(--r16);cursor:pointer;font-size:.88rem;color:var(--g300);transition:.2s;text-align:left}
+.q-opt:hover{border-color:var(--blue);color:#fff}
+.q-opt.correct{border-color:var(--green);background:rgba(16,185,129,.1);color:var(--green)}
+.q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+.q-opt.disabled{pointer-events:none}
+.q-fb{padding:11px 14px;border-radius:var(--r12);font-size:.85rem;margin-top:4px}
+.q-fb.correct{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--green)}
+.q-fb.wrong{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
+.q-score{text-align:center;padding:36px 20px}
+.q-score-num{font-size:3.8rem;font-weight:800;color:var(--blue3)}
+.q-score-lbl{font-size:.88rem;color:var(--g300);margin-top:4px}
+
+/* ====== MUSIC PLAYER ====== */
+.mp-wrap{background:linear-gradient(135deg,var(--bg2),rgba(37,99,235,.08));border:1px solid rgba(37,99,235,.3);border-radius:var(--r24);padding:26px;max-width:600px;margin:28px auto 0}
+.mp-np{font-size:.7rem;color:var(--blue3);font-family:var(--ffm);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px}
+.mp-title{font-size:1.15rem;font-weight:700;margin-bottom:3px}
+.mp-artist{font-size:.82rem;color:var(--g500);margin-bottom:18px}
+.mp-bar-wrap{margin-bottom:18px}
+.mp-bar{height:5px;background:rgba(255,255,255,.1);border-radius:3px;cursor:pointer;overflow:hidden}
+.mp-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue3));transition:width .3s linear;border-radius:3px;width:0%}
+.mp-times{display:flex;justify-content:space-between;font-size:.7rem;color:var(--g500);font-family:var(--ffm);margin-top:4px}
+.mp-ctrls{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.mp-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:.2s}
+.mp-btn:hover{background:rgba(37,99,235,.2);border-color:var(--blue)}
+.mp-play{background:var(--blue);border-color:var(--blue);width:50px;height:50px;font-size:1.2rem}
+.mp-play:hover{background:var(--blue2)}
+.mp-vol{display:flex;align-items:center;gap:8px;margin-left:auto;flex:1;max-width:160px}
+.mp-vol span{font-size:.78rem;color:var(--g500)}
+.mp-vol input{flex:1;accent-color:var(--blue);cursor:pointer}
+.mp-list{display:flex;flex-direction:column;gap:3px}
+.mp-trk{padding:9px 13px;border-radius:var(--r12);cursor:pointer;display:flex;align-items:center;gap:10px;font-size:.83rem;color:var(--g300);transition:.2s}
+.mp-trk:hover{background:rgba(255,255,255,.05)}
+.mp-trk.active{background:rgba(37,99,235,.15);color:var(--blue3)}
+.mp-trk-n{font-family:var(--ffm);font-size:.7rem;color:var(--g500);width:18px}
+.mp-trk-dur{font-family:var(--ffm);font-size:.7rem;color:var(--g500)}
+
+/* ====== MAP ====== */
+#storageMap{height:460px;border-radius:var(--r24);overflow:hidden;border:1px solid rgba(37,99,235,.3)}
+.map-leg{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
+.map-leg-item{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--g300)}
+.leg-dot{width:10px;height:10px;border-radius:50%}
+
+/* ====== WEATHER ====== */
+.wx-search{display:flex;gap:8px;margin-bottom:22px}
+.wx-input{flex:1;padding:11px 15px;background:var(--bg1);border:1px solid rgba(45,90,142,.4);border-radius:var(--r12);color:#fff;font-size:.92rem;outline:none;transition:.2s}
+.wx-input:focus{border-color:var(--blue)}
+.wx-card{background:linear-gradient(135deg,var(--bg2),rgba(37,99,235,.08));border:1px solid rgba(37,99,235,.3);border-radius:var(--r24);padding:26px;margin-bottom:18px}
+.wx-city{font-size:1.35rem;font-weight:700;margin-bottom:3px}
+.wx-main{display:flex;align-items:center;gap:18px;margin:18px 0}
+.wx-temp{font-size:3.6rem;font-weight:800;color:var(--blue3);line-height:1}
+.wx-desc{font-size:.95rem;color:var(--g300);text-transform:capitalize}
+.wx-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.ws{text-align:center;padding:13px;background:rgba(0,0,0,.2);border-radius:var(--r12)}
+.ws strong{display:block;font-size:1.05rem;color:var(--blue3)}
+.ws span{font-size:.72rem;color:var(--g500)}
+.fc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:580px){.fc-grid{grid-template-columns:repeat(3,1fr)}.wx-stats{grid-template-columns:repeat(2,1fr)}}
+.fc-card{background:var(--bg1);border:1px solid rgba(45,90,142,.3);border-radius:var(--r16);padding:13px;text-align:center}
+.fc-day{font-size:.72rem;color:var(--g500);margin-bottom:5px}
+.fc-icon{font-size:1.4rem;margin-bottom:5px}
+.fc-hi{color:var(--blue3);font-weight:600;font-size:.8rem}
+.fc-lo{color:var(--g500);font-size:.8rem}
+.wx-loading{display:flex;align-items:center;gap:10px;color:var(--blue3);font-size:.88rem;padding:18px}
+.spinner{width:18px;height:18px;border:2px solid rgba(37,99,235,.3);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wx-err{padding:14px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:var(--r12);color:#fca5a5;font-size:.86rem}
+
+/* ====== VIDEOS ====== */
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;margin-top:28px}
+.vid-card{background:var(--bg1);border:1px solid rgba(45,90,142,.3);border-radius:var(--r24);overflow:hidden;transition:.25s}
+.vid-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.vid-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden}
+.vid-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.vid-info{padding:14px}
+.vid-info h4{font-size:.92rem;margin-bottom:5px}
+.vid-info p{font-size:.78rem;color:var(--g300);line-height:1.5}
+
+/* ====== MOVIE ====== */
+.movie-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--r24);border:1px solid rgba(37,99,235,.3)}
+.movie-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.movie-info{margin-top:18px;padding:18px;background:var(--bg1);border-radius:var(--r24);border:1px solid rgba(45,90,142,.3)}
+.movie-info h3{margin-bottom:7px;font-size:1.05rem}
+.movie-info p{font-size:.83rem;color:var(--g300);line-height:1.6}
+
+/* ====== CHATBOT ====== */
+.chat-wrap{max-width:700px;margin:28px auto 0}
+.chat-hdr{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--bg2);border:1px solid rgba(45,90,142,.4);border-bottom:none;border-radius:var(--r24) var(--r24) 0 0}
+.chat-av{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--blue3));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.92rem;flex-shrink:0}
+.chat-bname{font-weight:700;font-size:.92rem}
+.chat-stat{font-size:.7rem;color:var(--green);font-family:var(--ffm);display:flex;align-items:center;gap:3px}
+.g-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:dp 1.5s infinite}
+.chat-win{height:360px;overflow-y:auto;background:var(--bg0);border:1px solid rgba(45,90,142,.4);border-top:none;border-bottom:none;padding:14px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.chat-win::-webkit-scrollbar{width:3px}
+.chat-win::-webkit-scrollbar-thumb{background:var(--bg2);border-radius:2px}
+.chat-msg{display:flex;gap:7px;max-width:88%}
+.chat-msg.bot{align-self:flex-start}.chat-msg.user{align-self:flex-end;flex-direction:row-reverse}
+.chat-mav{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem}
+.chat-msg.bot .chat-mav{background:linear-gradient(135deg,var(--blue),var(--blue3))}
+.chat-msg.user .chat-mav{background:var(--bg2)}
+.chat-bbl{padding:9px 13px;border-radius:13px;font-size:.855rem;line-height:1.5}
+.chat-msg.bot .chat-bbl{background:var(--bg2);border:1px solid rgba(45,90,142,.4);border-bottom-left-radius:3px}
+.chat-msg.user .chat-bbl{background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.3);border-bottom-right-radius:3px}
+.chat-t{font-size:.62rem;color:var(--g500);margin-top:3px}
+.td-wrap{display:flex;gap:3px;padding:9px 13px}
+.td{width:6px;height:6px;border-radius:50%;background:var(--g500);animation:tdot .9s infinite}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.chat-quick{padding:9px 14px;background:var(--bg1);border-left:1px solid rgba(45,90,142,.4);border-right:1px solid rgba(45,90,142,.4);display:flex;gap:5px;overflow-x:auto;flex-shrink:0}
+.chat-quick::-webkit-scrollbar{display:none}
+.chat-qb{padding:4px 11px;background:transparent;border:1px solid rgba(45,90,142,.4);border-radius:99px;font-size:.73rem;color:var(--g300);cursor:pointer;white-space:nowrap;transition:.2s}
+.chat-qb:hover{border-color:var(--blue);color:var(--blue3)}
+.chat-input-row{display:flex;gap:7px;padding:11px 14px;background:var(--bg2);border:1px solid rgba(45,90,142,.4);border-top:none;border-radius:0 0 var(--r24) var(--r24)}
+.chat-ti{flex:1;padding:9px 13px;background:var(--bg0);border:1px solid rgba(45,90,142,.3);border-radius:var(--r12);color:#fff;font-size:.855rem;outline:none;transition:.2s}
+.chat-ti:focus{border-color:var(--blue)}
+.chat-send{background:var(--blue);border:none;border-radius:var(--r12);padding:9px 16px;color:#fff;font-weight:700;cursor:pointer;font-size:.855rem;transition:.2s}
+.chat-send:hover{background:var(--blue2)}
+
+/* FOOTER */
+.site-footer{background:var(--bg1);border-top:1px solid rgba(45,90,142,.3);padding:36px 0 20px;text-align:center}
+.site-footer p{font-size:.8rem;color:var(--g500)}
+.site-footer a{color:var(--blue3)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-scroll{display:none}
+  .section{padding:52px 0}
+  .hero{padding:88px 0 52px}
+  .storage-grid{grid-template-columns:1fr}
+  .mp-wrap{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="nav-icon">&#x1F4BE;</div>
+      <span>Digital Storage</span>
+    </div>
+    <div class="nav-scroll">
+      <button class="nav-l active" onclick="navTo('home')">Home</button>
+      <button class="nav-l" onclick="navTo('fundamentals')">Fundamentals</button>
+      <button class="nav-l" onclick="navTo('comparison')">Comparison</button>
+      <button class="nav-l" onclick="navTo('tools')">Tools</button>
+      <button class="nav-l" onclick="navTo('music')">Music</button>
+      <button class="nav-l" onclick="navTo('map')">Map</button>
+      <button class="nav-l" onclick="navTo('weather')">Weather</button>
+      <button class="nav-l" onclick="navTo('videos')">Videos</button>
+      <button class="nav-l" onclick="navTo('movie')">Movie</button>
+      <button class="nav-l" onclick="navTo('chatbot')">Chatbot</button>
+      <button class="nav-l" onclick="navTo('quiz')">Quiz</button>
+    </div>
+    <a href="index.html" class="nav-back">&#8592; Portfolio</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home" class="hero section">
+  <div class="container">
+    <div class="hero-tag"><span class="dot-pulse"></span>CS 125 &bull; Maya Manzi &bull; Digital Storage Guide</div>
+    <h1>Everything About<br><span>Digital Storage</span></h1>
+    <p class="hero-desc">Explore HDD, SSD, USB drives, cloud storage and more. Interactive tools, live weather, AI chatbot, music player, global tech map, and educational videos &mdash; all in one page.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary" onclick="navTo('fundamentals')">&#x1F4DA; Start Learning</button>
+      <button class="btn btn-outline" onclick="navTo('tools')">&#x1F6E0; Interactive Tools</button>
+      <button class="btn btn-ghost" onclick="navTo('chatbot')">&#x1F916; AI Chatbot</button>
+    </div>
+    <div class="hero-stats">
+      <div class="h-stat"><strong>7</strong><span>Storage Types</span></div>
+      <div class="h-stat"><strong>10</strong><span>Sections</span></div>
+      <div class="h-stat"><strong>4</strong><span>Videos</span></div>
+      <div class="h-stat"><strong>10</strong><span>Quiz Questions</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNDAMENTALS -->
+<section id="fundamentals" class="section section-alt">
+  <div class="container">
+    <span class="sec-label">Chapter 3 &bull; Educational Content</span>
+    <h2 class="sec-title">Digital Storage Fundamentals</h2>
+    <p class="sec-sub">How each storage technology works, its strengths, weaknesses, and best use cases.</p>
+    <div class="storage-grid">
+
+      <div class="st-card">
+        <div class="st-icon ic-blue">&#x1F5B4;</div>
+        <h3>HDD &mdash; Hard Disk Drive</h3>
+        <p>Mechanical storage using spinning magnetic platters and a read/write arm. Data is encoded magnetically. HDDs offer the highest capacity at the lowest cost but are slower and fragile due to moving parts. Best for bulk storage and backups.</p>
+        <div class="st-specs">
+          <div class="st-row"><span class="lbl">Capacity</span><span class="val">500GB &ndash; 20TB</span></div>
+          <div class="st-row"><span class="lbl">Speed</span><span class="val">80&ndash;160 MB/s</span></div>
+          <div class="st-row"><span class="lbl">Cost/TB</span><span class="val">~$20</span></div>
+          <div class="st-row"><span class="lbl">Moving Parts</span><span class="val">Yes &mdash; fragile</span></div>
+        </div>
+      </div>
+
+      <div class="st-card">
+        <div class="st-icon ic-blue">&#x26A1;</div>
+        <h3>SATA SSD</h3>
+        <p>Solid State Drive using the SATA interface. No moving parts &mdash; data stored on NAND flash chips. Much faster, quieter and more durable than HDDs. SATA SSDs are the most common laptop upgrade. Speeds are limited to ~550 MB/s by the SATA interface.</p>
+        <div class="st-specs">
+          <div class="st-row"><span class="lbl">Capacity</span><span class="val">120GB &ndash; 4TB</span></div>
+          <div class="st-row"><span class="lbl">Speed</span><span class="val">~550 MB/s</span></div>
+          <div class="st-row"><span class="lbl">Cost/TB</span><span class="val">~$60</span></div>
+          <div class="st-row"><span class="lbl">Interface</span><span class="val">SATA III</span></div>
+        </div>
+      </div>
+
+      <div class="st-card">
+        <div class="st-icon ic-purple">&#x1F680;</div>
+        <h3>NVMe SSD</h3>
+        <p>Next-generation SSDs using NVMe protocol over PCIe, bypassing the SATA bottleneck. These are the fastest consumer storage devices. Reaching 7,000+ MB/s, they are used in gaming PCs, professional workstations, and the latest laptops. Come in the compact M.2 form factor.</p>
+        <div class="st-specs">
+          <div class="st-row"><span class="lbl">Capacity</span><span class="val">250GB &ndash; 8TB</span></div>
+          <div class="st-row"><span class="lbl">Speed</span><span class="val">3,500&ndash;7,000 MB/s</span></div>
+          <div class="st-row"><span class="lbl">Cost/TB</span><span class="val">~$80</span></div>
+          <div class="st-row"><span class="lbl">Interface</span><span class="val">PCIe 4.0/5.0</span></div>
+        </div>
+      </div>
+
+      <div class="st-card">
+        <div class="st-icon ic-amber">&#x1F50C;</div>
+        <h3>USB Flash Drive</h3>
+        <p>Small portable storage using flash memory in a USB form factor. No installation required &mdash; plug in and use. Great for transferring files between devices. Speeds vary dramatically: cheap USB 2.0 drives are 15 MB/s, while fast USB 3.2 Gen 2 drives exceed 400 MB/s.</p>
+        <div class="st-specs">
+          <div class="st-row"><span class="lbl">Capacity</span><span class="val">4GB &ndash; 2TB</span></div>
+          <div class="st-row"><span class="lbl">Speed</span><span class="val">15&ndash;400 MB/s</span></div>
+          <div class="st-row"><span class="lbl">Cost/TB</span><span class="val">~$100</span></div>
+          <div class="st-row"><span class="lbl">Portability</span><span class="val">Excellent</span></div>
+        </div>
+      </div>
+
+      <div class="st-card">
+        <div class="st-icon ic-green">&#x1F4F8;</div>
+        <h3>Memory Cards (SD / microSD)</h3>
+        <p>Tiny flash memory cards used in cameras, smartphones, drones, and gaming handhelds. SD card speed classes (UHS-I, UHS-II) determine recording performance. Essential for photographers needing fast portable storage in the field. MicroSD cards are used in phones and the Nintendo Switch.</p>
+        <div class="st-specs">
+          <div class="st-row"><span class="lbl">Capacity</span><span class="val">2GB &ndash; 1TB</span></div>
+          <div class="st-row"><span class="lbl">Speed</span><span class="val">10&ndash;300 MB/s</span></div>
+          <div class="st-row"><span class="lbl">Cost/TB</span><span class="val">~$120</span></div>
+          <div class="st-row"><span class="lbl">Form Factor</span><span class="val">Tiny</span></div>
+        </div>
+      </div>
+
+      <div class="st-card">
+        <div class="st-icon ic-amber">&#x1F4BF;</div>
+        <h3>Optical Storage (CD / DVD / Blu-ray)</h3>
+        <p>Data encoded on a spinning disc using a laser. CDs: 700MB, DVDs: 4.7&ndash;17GB, Blu-ray: 25&ndash;100GB. Optical media is exceptionally durable &mdash; archival-grade discs last 100+ years. Still used for movie distribution, software, and long-term data archiving where longevity matters most.</p>
+        <div class="st-specs">
+          <div class="st-row"><span class="lbl">Capacity</span><span class="val">700MB &ndash; 100GB</span></div>
+          <div class="st-row"><span class="lbl">Speed</span><span class="val">2&ndash;72 MB/s</span></div>
+          <div class="st-row"><span class="lbl">Lifespan</span><span class="val">100+ years</span></div>
+          <div class="st-row"><span class="lbl">Cost/disc</span><span class="val">$0.10&ndash;$2</span></div>
+        </div>
+      </div>
+
+      <div class="st-card">
+        <div class="st-icon ic-blue">&#x2601;&#xFE0F;</div>
+        <h3>Cloud Storage</h3>
+        <p>Data stored on remote servers and accessed over the internet. Examples: Google Drive (15GB free), iCloud, OneDrive, Dropbox, AWS S3. Infinitely scalable, accessible from any device, and protected by built-in geographic redundancy. Speed depends entirely on your internet connection.</p>
+        <div class="st-specs">
+          <div class="st-row"><span class="lbl">Capacity</span><span class="val">Unlimited</span></div>
+          <div class="st-row"><span class="lbl">Speed</span><span class="val">Internet dependent</span></div>
+          <div class="st-row"><span class="lbl">Cost/TB/mo</span><span class="val">$2&ndash;$10</span></div>
+          <div class="st-row"><span class="lbl">Accessibility</span><span class="val">Any device</span></div>
+        </div>
+      </div>
+
+      <div class="st-card" style="border-color:rgba(37,99,235,.45);background:linear-gradient(135deg,var(--bg2),rgba(37,99,235,.07))">
+        <div class="st-icon ic-blue">&#x1F512;</div>
+        <h3>Data Security &amp; Backup</h3>
+        <p>Best practice is the 3-2-1 rule: 3 copies of data, on 2 different media types, with 1 copy offsite. AES-256 encryption scrambles data so only authorized users can read it. Regular automated backups protect against ransomware, hardware failure, theft, and accidental deletion.</p>
+        <div class="st-specs">
+          <div class="st-row"><span class="lbl">Rule</span><span class="val">3-2-1 Backup</span></div>
+          <div class="st-row"><span class="lbl">Encryption</span><span class="val">AES-256</span></div>
+          <div class="st-row"><span class="lbl">Frequency</span><span class="val">Daily / Weekly</span></div>
+          <div class="st-row"><span class="lbl">Test restores</span><span class="val">Monthly</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section id="comparison" class="section">
+  <div class="container">
+    <span class="sec-label">Interactive Feature</span>
+    <h2 class="sec-title">Storage Technology Comparison</h2>
+    <p class="sec-sub">Select storage types to compare side-by-side. All specs are approximate real-world values.</p>
+    <div class="cmp-ctrls" id="cmpCtrls">
+      <label class="cmp-lbl"><input type="checkbox" checked value="hdd"> HDD</label>
+      <label class="cmp-lbl"><input type="checkbox" checked value="sata"> SATA SSD</label>
+      <label class="cmp-lbl"><input type="checkbox" checked value="nvme"> NVMe SSD</label>
+      <label class="cmp-lbl"><input type="checkbox" value="usb"> USB Flash</label>
+      <label class="cmp-lbl"><input type="checkbox" value="sd"> Memory Card</label>
+      <label class="cmp-lbl"><input type="checkbox" value="optical"> Optical</label>
+      <label class="cmp-lbl"><input type="checkbox" value="cloud"> Cloud</label>
+    </div>
+    <div class="tbl-wrap">
+      <table class="cmp-tbl">
+        <thead><tr><th>Type</th><th>Max Capacity</th><th>Speed</th><th>Durability</th><th>Portability</th><th>Cost/TB</th><th>Best For</th></tr></thead>
+        <tbody id="cmpBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools" class="section section-alt">
+  <div class="container">
+    <span class="sec-label">Interactive Tools</span>
+    <h2 class="sec-title">Storage Tools</h2>
+    <p class="sec-sub">Calculate storage needs, get personalised recommendations, and test your knowledge.</p>
+    <div class="tool-tabs">
+      <button class="tool-tab active" onclick="switchTool('calc')">&#x1F4D0; Storage Calculator</button>
+      <button class="tool-tab" onclick="switchTool('rec')">&#x1F4A1; Recommender</button>
+      <button class="tool-tab" onclick="switchTool('quiz')">&#x1F4DD; Practice Quiz</button>
+    </div>
+
+    <!-- CALCULATOR -->
+    <div class="tool-panel active" id="tool-calc">
+      <div class="calc-grid">
+        <div>
+          <div class="ci-group"><label>Storage Size</label><input type="number" class="ci" id="cSize" value="256" min="1"></div>
+          <div class="ci-group"><label>Unit</label><select class="ci" id="cUnit"><option value="1">GB</option><option value="1000">TB</option><option value="0.001">MB</option></select></div>
+          <div class="ci-group"><label>Photo Quality</label><select class="ci" id="cPhoto"><option value="4">Smartphone (4 MB avg)</option><option value="8">DSLR JPEG (8 MB avg)</option><option value="25">RAW Photo (25 MB avg)</option></select></div>
+          <div class="ci-group"><label>Video Quality</label><select class="ci" id="cVideo"><option value="1500">1080p MP4 (1.5 GB/hr)</option><option value="6000">4K H.264 (6 GB/hr)</option><option value="375">480p (375 MB/hr)</option></select></div>
+          <button class="btn btn-primary" onclick="runCalc()">Calculate</button>
+        </div>
+        <div class="calc-out" id="calcOut">
+          <h4 style="margin-bottom:14px;color:var(--blue3)">Results will appear here</h4>
+          <p style="font-size:.83rem;color:var(--g500)">Enter your storage size and click Calculate.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECOMMENDER -->
+    <div class="tool-panel" id="tool-rec">
+      <p style="color:var(--g300);font-size:.88rem;margin-bottom:16px">Select your primary use case for a personalised storage recommendation:</p>
+      <div class="rec-opts">
+        <div class="rec-opt" onclick="pickRec(this,'gaming')"><div class="rec-opt-icon">&#x1F3AE;</div><span>Gaming</span></div>
+        <div class="rec-opt" onclick="pickRec(this,'school')"><div class="rec-opt-icon">&#x1F4DA;</div><span>School Work</span></div>
+        <div class="rec-opt" onclick="pickRec(this,'photo')"><div class="rec-opt-icon">&#x1F4F8;</div><span>Photography</span></div>
+        <div class="rec-opt" onclick="pickRec(this,'business')"><div class="rec-opt-icon">&#x1F4BC;</div><span>Business</span></div>
+        <div class="rec-opt" onclick="pickRec(this,'backup')"><div class="rec-opt-icon">&#x1F512;</div><span>Data Backup</span></div>
+        <div class="rec-opt" onclick="pickRec(this,'travel')"><div class="rec-opt-icon">&#x2708;&#xFE0F;</div><span>Travel</span></div>
+      </div>
+      <div class="rec-box hidden" id="recBox">
+        <h4 id="recTitle"></h4>
+        <p id="recDesc"></p>
+        <div class="rec-chips" id="recChips"></div>
+      </div>
+    </div>
+
+    <!-- QUIZ (inline) -->
+    <div class="tool-panel" id="tool-quiz">
+      <p style="color:var(--g300);font-size:.88rem;margin-bottom:16px">10 multiple-choice questions with instant feedback. Test your storage knowledge!</p>
+      <div id="toolQuizCont"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MUSIC -->
+<section id="music" class="section">
+  <div class="container">
+    <span class="sec-label">Entertainment</span>
+    <h2 class="sec-title">Music Player</h2>
+    <p class="sec-sub">Synthesised ambient study music using your browser&apos;s Web Audio API. Press Play to start &mdash; never plays automatically.</p>
+    <div class="mp-wrap">
+      <div class="mp-np">NOW PLAYING</div>
+      <div class="mp-title" id="mpTitle">Ambient Study Vol. 1</div>
+      <div class="mp-artist" id="mpArtist">Synthesised &bull; Royalty-Free &bull; Web Audio API</div>
+      <div class="mp-bar-wrap">
+        <div class="mp-bar" id="mpBar" onclick="mpSeek(event)"><div class="mp-fill" id="mpFill"></div></div>
+        <div class="mp-times"><span id="mpCur">0:00</span><span id="mpTot">2:00</span></div>
+      </div>
+      <div class="mp-ctrls">
+        <button class="mp-btn" onclick="mpPrev()" title="Previous">&#x23EE;</button>
+        <button class="mp-btn mp-play" id="mpPlay" onclick="mpToggle()">&#x25B6;</button>
+        <button class="mp-btn" onclick="mpNext()" title="Next">&#x23ED;</button>
+        <div class="mp-vol">
+          <span>&#x1F50A;</span>
+          <input type="range" min="0" max="100" value="70" oninput="mpVol(this.value)">
+        </div>
+      </div>
+      <div class="mp-list" id="mpList"></div>
+    </div>
+    <p style="text-align:center;font-size:.76rem;color:var(--g500);margin-top:14px">Music is synthesised using the browser Web Audio API &mdash; no external audio files required. Runs entirely in your browser.</p>
+  </div>
+</section>
+
+<!-- MAP -->
+<section id="map" class="section section-alt">
+  <div class="container">
+    <span class="sec-label">Interactive Map &bull; OpenStreetMap + Leaflet</span>
+    <h2 class="sec-title">Global Storage &amp; Tech Infrastructure</h2>
+    <p class="sec-sub">Major data centres and tech company locations. Click any marker for details. Free map &mdash; no API key needed.</p>
+    <div id="storageMap"></div>
+    <div class="map-leg">
+      <div class="map-leg-item"><div class="leg-dot" style="background:#2563eb"></div>Data Centres</div>
+      <div class="map-leg-item"><div class="leg-dot" style="background:#10b981"></div>Universities</div>
+      <div class="map-leg-item"><div class="leg-dot" style="background:#f59e0b"></div>Tech Companies</div>
+    </div>
+  </div>
+</section>
+
+<!-- WEATHER -->
+<section id="weather" class="section">
+  <div class="container">
+    <span class="sec-label">Live Data &bull; Open-Meteo API &bull; No API Key Required</span>
+    <h2 class="sec-title">Weather Dashboard</h2>
+    <p class="sec-sub">Real live weather data for any city. Uses the free Open-Meteo API &mdash; no account or API key needed.</p>
+    <div class="wx-search">
+      <input type="text" class="wx-input" id="wxInput" placeholder="Search city e.g. New York, London, Tokyo..." onkeypress="if(event.key==='Enter')doWeather()">
+      <button class="btn btn-primary" onclick="doWeather()">Get Weather</button>
+    </div>
+    <div id="wxResult"></div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section id="videos" class="section section-alt">
+  <div class="container">
+    <span class="sec-label">Educational Videos &bull; YouTube</span>
+    <h2 class="sec-title">Video Library</h2>
+    <p class="sec-sub">Learn how storage technologies work through these educational YouTube videos.</p>
+    <div class="vid-grid">
+      <div class="vid-card">
+        <div class="vid-embed"><iframe src="https://www.youtube.com/embed/wtdnatmVdIg" title="How Hard Drives Work" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-info"><h4>How Hard Drives Work</h4><p>Animated explanation of how spinning hard disk drives read and write data using magnetic platters and a read/write head.</p><span class="badge b-blue" style="margin-top:7px">HDD Technology</span></div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-embed"><iframe src="https://www.youtube.com/embed/5Mh3o886qpg" title="How SSDs Work" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-info"><h4>How SSDs Work</h4><p>Explains NAND flash memory cells inside solid state drives and why SSDs are faster and more reliable than traditional HDDs.</p><span class="badge b-purple" style="margin-top:7px">SSD Technology</span></div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-embed"><iframe src="https://www.youtube.com/embed/M988_fsOSWo" title="Cloud Storage Explained" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-info"><h4>Cloud Storage Explained</h4><p>How cloud storage services work including data replication, redundancy, and how your files are stored across multiple servers.</p><span class="badge b-blue" style="margin-top:7px">Cloud Storage</span></div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-embed"><iframe src="https://www.youtube.com/embed/inWWhr5tnEA" title="Cybersecurity and Data Protection" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vid-info"><h4>Cybersecurity &amp; Data Protection</h4><p>Encryption, backup strategies, and data security practices to protect stored information from hackers and data loss.</p><span class="badge b-green" style="margin-top:7px">Data Security</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOVIE -->
+<section id="movie" class="section">
+  <div class="container">
+    <span class="sec-label">Movie Theater &bull; Educational Documentary</span>
+    <h2 class="sec-title">Featured Documentary</h2>
+    <p class="sec-sub">An in-depth educational documentary about how modern digital storage devices actually work at the hardware level.</p>
+    <div class="movie-wrap">
+      <iframe src="https://www.youtube.com/embed/QSrg3MhDs-M" title="How Data Storage Works - Branch Education" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share" allowfullscreen></iframe>
+    </div>
+    <div class="movie-info">
+      <h3>&#x1F3AC; How Data Storage Works &mdash; Branch Education</h3>
+      <p>This detailed animation explains exactly how modern storage devices work: how electrons store bits inside NAND flash cells, how magnetic domains encode data on hard disk platters, and why NVMe SSDs are dramatically faster than traditional drives. Essential viewing for CS 125 Chapter 3.</p>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <span class="badge b-blue">Educational</span>
+        <span class="badge b-green">YouTube &bull; Freely Embeddable</span>
+        <span class="badge b-amber">~10 minutes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHATBOT -->
+<section id="chatbot" class="section section-alt">
+  <div class="container">
+    <span class="sec-label">AI Chatbot &bull; Demo Mode &bull; Pattern Matching</span>
+    <h2 class="sec-title">Storage AI Chatbot</h2>
+    <p class="sec-sub">Ask anything about digital storage. Clearly labelled Demo &mdash; uses smart pattern-matching with 50+ responses. No API keys used or exposed.</p>
+    <div style="display:flex;justify-content:center;margin-bottom:14px">
+      <span class="badge b-amber">&#x1F4CB; DEMO Chatbot &mdash; Pattern Matching &bull; No External AI API Key</span>
+    </div>
+    <div class="chat-wrap">
+      <div class="chat-hdr">
+        <div class="chat-av">&#x1F916;</div>
+        <div><div class="chat-bname">StorageBot &bull; CS 125 Assistant</div><div class="chat-stat"><span class="g-dot"></span>Online &bull; Demo Mode</div></div>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="clearChat()">Clear</button>
+      </div>
+      <div class="chat-win" id="chatWin"></div>
+      <div class="chat-quick">
+        <button class="chat-qb" onclick="sendChat('What is an HDD?')">HDD?</button>
+        <button class="chat-qb" onclick="sendChat('How does an SSD work?')">SSD?</button>
+        <button class="chat-qb" onclick="sendChat('What is cloud storage?')">Cloud?</button>
+        <button class="chat-qb" onclick="sendChat('HDD vs SSD differences?')">HDD vs SSD?</button>
+        <button class="chat-qb" onclick="sendChat('What storage should I buy for gaming?')">Gaming?</button>
+        <button class="chat-qb" onclick="sendChat('How do I backup my data?')">Backup?</button>
+        <button class="chat-qb" onclick="sendChat('What is encryption?')">Encryption?</button>
+        <button class="chat-qb" onclick="sendChat('How much storage do I need?')">How much?</button>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" class="chat-ti" id="chatTi" placeholder="Ask about HDDs, SSDs, cloud storage, backup, encryption..." onkeypress="if(event.key==='Enter')sendChatInput()">
+        <button class="chat-send" onclick="sendChatInput()">Send</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="section">
+  <div class="container">
+    <span class="sec-label">Learning Resources</span>
+    <h2 class="sec-title">Digital Storage Quiz</h2>
+    <p class="sec-sub">10 multiple-choice questions with instant feedback and explanations. Test your Chapter 3 knowledge!</p>
+    <div id="mainQuiz" style="max-width:700px;margin:28px auto 0"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Maya Manzi &bull; CS 125 Digital Citizenship Portfolio &bull; Caldwell University &bull; 2026</p>
+    <p style="margin-top:8px">Weather data from <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> (free, no API key) &bull; Map from <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a> via Leaflet.js &bull; Music synthesised via Web Audio API</p>
+  </div>
+</footer>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<script>
+// ============================================================
+// NAVIGATION
+// ============================================================
+const SECTS=['home','fundamentals','comparison','tools','music','map','weather','videos','movie','chatbot','quiz'];
+function navTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});}
+window.addEventListener('scroll',()=>{
+  let cur='home';
+  SECTS.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-100)cur=id;});
+  document.querySelectorAll('.nav-l').forEach((l,i)=>l.classList.toggle('active',SECTS[i]===cur));
+});
+
+// ============================================================
+// COMPARISON TABLE
+// ============================================================
+const SD={
+  hdd:   {n:'HDD',          cap:'20TB',  spd:80,   sl:'80-160 MB/s', dur:'★★★☆☆',port:'★★☆☆☆',cost:'~$20/TB',  best:'Bulk storage, NAS, backups'},
+  sata:  {n:'SATA SSD',     cap:'4TB',   spd:550,  sl:'~550 MB/s',   dur:'★★★★☆',port:'★★★☆☆',cost:'~$60/TB',  best:'Laptops, desktops, OS drives'},
+  nvme:  {n:'NVMe SSD',     cap:'8TB',   spd:7000, sl:'3,500-7,000 MB/s',dur:'★★★★★',port:'★★★☆☆',cost:'~$80/TB', best:'Gaming, video editing, AI workloads'},
+  usb:   {n:'USB Flash',    cap:'2TB',   spd:20,   sl:'15-400 MB/s', dur:'★★★☆☆',port:'★★★★★',cost:'~$100/TB', best:'File transfer, portability'},
+  sd:    {n:'Memory Card',  cap:'1TB',   spd:10,   sl:'10-300 MB/s', dur:'★★★★☆',port:'★★★★★',cost:'~$120/TB', best:'Cameras, phones, drones'},
+  optical:{n:'Optical',     cap:'100GB', spd:2,    sl:'2-72 MB/s',   dur:'★★★★★',port:'★★★★☆',cost:'$0.10/disc',best:'Archiving, long-term storage'},
+  cloud: {n:'Cloud',        cap:'Unlimited',spd:200,sl:'Internet speed',dur:'★★★★★',port:'★★★★★',cost:'$2-10/TB/mo',best:'Backup, sync, collaboration'},
+};
+function rebuildTable(){
+  const checked=[...document.querySelectorAll('#cmpCtrls input:checked')].map(c=>c.value);
+  document.getElementById('cmpBody').innerHTML=checked.map(k=>{
+    const d=SD[k];const pct=Math.min(100,Math.round(d.spd/70));
+    return '<tr><td>'+d.n+'</td><td>'+d.cap+'</td><td><div class="spd-wrap"><div class="spd-bar"><div class="spd-fill" style="width:'+pct+'%"></div></div><span style="font-size:.73rem;color:var(--g300);white-space:nowrap">'+d.sl+'</span></div></td><td class="stars">'+d.dur+'</td><td class="stars">'+d.port+'</td><td style="font-family:var(--ffm);font-size:.8rem;color:var(--blue3)">'+d.cost+'</td><td style="color:var(--g300);font-size:.8rem">'+d.best+'</td></tr>';
+  }).join('');
+}
+document.querySelectorAll('#cmpCtrls input').forEach(cb=>cb.addEventListener('change',rebuildTable));
+rebuildTable();
+
+// ============================================================
+// CALCULATOR
+// ============================================================
+function runCalc(){
+  const gb=parseFloat(document.getElementById('cSize').value)*parseFloat(document.getElementById('cUnit').value);
+  const pMB=parseFloat(document.getElementById('cPhoto').value);
+  const vMB=parseFloat(document.getElementById('cVideo').value);
+  const photos=Math.floor(gb*1024/pMB);
+  const songs=Math.floor(gb*1024/5);
+  const vHrs=Math.floor(gb*1024/vMB*60/60);
+  const ebooks=Math.floor(gb*1024/2);
+  document.getElementById('calcOut').innerHTML='<h4 style="margin-bottom:14px;color:var(--blue3)">'+gb.toLocaleString()+' GB can hold:</h4><div class="c-row"><span>Photos</span><strong>'+photos.toLocaleString()+'</strong></div><div class="c-row"><span>Songs (MP3 ~5MB)</span><strong>'+songs.toLocaleString()+'</strong></div><div class="c-row"><span>Video (hours)</span><strong>'+vHrs.toLocaleString()+' hrs</strong></div><div class="c-row"><span>eBooks (~2MB each)</span><strong>'+ebooks.toLocaleString()+'</strong></div>';
+}
+runCalc();
+
+// ============================================================
+// RECOMMENDER
+// ============================================================
+const RECS={
+  gaming:  {t:'Gaming Setup',     d:'For gaming, NVMe SSD gives the fastest load times and game streaming. Pair it with a large HDD for your full game library.',       c:['NVMe SSD 1TB+ (primary)','HDD 2TB+ (game library)','500GB minimum']},
+  school:  {t:'School & Studies', d:'A SATA SSD for your OS and documents, plus Google Drive or OneDrive keeps work synced and backed up across all your devices.',       c:['SATA SSD 256GB+','Google Drive / OneDrive','USB Drive for sharing']},
+  photo:   {t:'Photography',      d:'Photographers need fast NVMe for active RAW file editing, a large HDD or NAS for the archive, and fast SD cards for capture.',       c:['NVMe SSD (active work)','HDD 4TB+ (archive)','SD UHS-II for camera']},
+  business:{t:'Business Use',     d:'Business needs reliability and security. Enterprise SSDs locally, cloud for collaboration, with encrypted automated daily backups.',   c:['Enterprise SSD','OneDrive / SharePoint','Encrypted Backup NAS']},
+  backup:  {t:'Data Backup',      d:'Follow the 3-2-1 rule: 3 copies, 2 media types, 1 offsite. External HDD locally, cloud offsite, optical disc for long-term archive.',c:['External HDD (local)','Cloud Storage (offsite)','Optical Disc (archive)']},
+  travel:  {t:'Travel & Portable',d:'For travel, use a rugged USB drive or high-capacity SD card plus cloud sync so files are accessible even if the physical drive is lost.',c:['Rugged USB 3.2 Drive','High-capacity microSD','Cloud Storage sync']},
+};
+function pickRec(el,k){
+  document.querySelectorAll('.rec-opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  const r=RECS[k];
+  document.getElementById('recTitle').textContent=r.t;
+  document.getElementById('recDesc').textContent=r.d;
+  document.getElementById('recChips').innerHTML=r.c.map(c=>'<span class="rec-chip">'+c+'</span>').join('');
+  document.getElementById('recBox').classList.remove('hidden');
+}
+
+// ============================================================
+// QUIZ ENGINE
+// ============================================================
+const QS=[
+  {q:'What does HDD stand for?',opts:['Hard Drive Disk','High Definition Display','Hard Disk Drive','High Data Density'],a:2,e:'HDD = Hard Disk Drive. It uses spinning magnetic platters to store data.'},
+  {q:'Which type of SSD is the fastest?',opts:['SATA SSD','IDE SSD','NVMe SSD','USB SSD'],a:2,e:'NVMe SSDs use PCIe lanes and reach speeds of 7,000+ MB/s, far beyond SATA's ~550 MB/s cap.'},
+  {q:'What is the typical read speed of a SATA SSD?',opts:['80-160 MB/s','~550 MB/s','3,500 MB/s','10 MB/s'],a:1,e:'SATA SSDs max at ~550 MB/s due to the SATA interface bottleneck.'},
+  {q:'Which storage uses spinning magnetic platters?',opts:['NVMe SSD','USB Flash Drive','Memory Card','HDD'],a:3,e:'HDDs use spinning platters and a read/write arm. All other options use flash memory.'},
+  {q:'What does the 3-2-1 backup rule mean?',opts:['3 drives, 2 clouds, 1 server','3 copies, 2 media types, 1 offsite','3 backups/day, 2 weekly, 1 monthly','3 TB, 2 locations, 1 key'],a:1,e:'3-2-1 means 3 copies of your data, on 2 different media types, with 1 copy stored offsite.'},
+  {q:'What encryption standard is used to secure stored data?',opts:['MD5','SHA-1','AES-256','RSA-128'],a:2,e:'AES-256 is the gold standard for data encryption, used by banks, governments, and security software.'},
+  {q:'Which cloud storage service is made by Google?',opts:['OneDrive','iCloud','Dropbox','Google Drive'],a:3,e:'Google Drive is Google's cloud storage. OneDrive is Microsoft's, iCloud is Apple's.'},
+  {q:'What interface does an NVMe SSD use?',opts:['SATA','USB','PCIe','FireWire'],a:2,e:'NVMe SSDs use PCIe (PCI Express), providing far more bandwidth than the SATA interface.'},
+  {q:'How much data does a single-layer Blu-ray disc hold?',opts:['700 MB','4.7 GB','25 GB','100 GB'],a:2,e:'A single-layer Blu-ray holds 25 GB. Dual-layer = 50 GB. BDXL = up to 128 GB.'},
+  {q:'Which is best for transferring files between two computers quickly?',opts:['Optical Disc','USB Flash Drive','NVMe SSD','Memory Card'],a:1,e:'A USB Flash Drive is the classic portable transfer medium: instant, no internet needed, fits in your pocket.'},
+];
+let qIdx={main:0,tool:0},qScore={main:0,tool:0},qDone={main:false,tool:false};
+function initQ(cid){qIdx[cid]=0;qScore[cid]=0;qDone[cid]=false;renderQ(cid);}
+function renderQ(cid){
+  const el=document.getElementById(cid==='main'?'mainQuiz':'toolQuizCont');
+  if(qIdx[cid]>=QS.length){
+    const pct=Math.round(qScore[cid]/QS.length*100);
+    const grade=pct>=90?'Excellent! 🏆':pct>=70?'Good Job! 👍':pct>=50?'Keep Studying 📚':'Review Fundamentals 🔄';
+    el.innerHTML='<div class="q-score"><div class="q-score-num">'+qScore[cid]+'/'+QS.length+'</div><div class="q-score-lbl">'+pct+'% &bull; '+grade+'</div><p style="color:var(--g300);font-size:.88rem;margin:14px auto;max-width:360px">You answered '+qScore[cid]+' out of '+QS.length+' correctly.</p><button class="btn btn-primary" onclick="initQ(''+cid+'')">Retake Quiz</button></div>';
+    return;
+  }
+  const q=QS[qIdx[cid]];
+  el.innerHTML='<div class="q-prog"><span style="font-size:.78rem;color:var(--g300)">Q'+(qIdx[cid]+1)+'/'+QS.length+'</span><div class="q-pb"><div class="q-pf" style="width:'+(qIdx[cid]/QS.length*100)+'%"></div></div><span style="font-size:.78rem;color:var(--blue3);font-family:var(--ffm)">'+qScore[cid]+' pts</span></div><div class="q-question">'+q.q+'</div><div class="q-opts">'+q.opts.map((o,i)=>'<button class="q-opt" onclick="ansQ('+i+',''+cid+'')">'+o+'</button>').join('')+'</div><div id="qfb_'+cid+'"></div>';
+}
+function ansQ(idx,cid){
+  const q=QS[qIdx[cid]];
+  const el=document.getElementById(cid==='main'?'mainQuiz':'toolQuizCont');
+  const opts=el.querySelectorAll('.q-opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  if(idx===q.a){opts[idx].classList.add('correct');qScore[cid]++;document.getElementById('qfb_'+cid).innerHTML='<div class="q-fb correct">Correct! '+q.e+'</div>';}
+  else{opts[idx].classList.add('wrong');opts[q.a].classList.add('correct');document.getElementById('qfb_'+cid).innerHTML='<div class="q-fb wrong">Not quite. '+q.e+'</div>';}
+  setTimeout(()=>{qIdx[cid]++;renderQ(cid);},2500);
+}
+initQ('main');
+initQ('tool');
+
+// ============================================================
+// TOOL TAB SWITCHER
+// ============================================================
+function switchTool(id){
+  const ids=['calc','rec','quiz'];
+  document.querySelectorAll('.tool-tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));
+  document.querySelectorAll('.tool-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tool-'+id).classList.add('active');
+  if(id==='quiz'){qIdx.tool=0;qScore.tool=0;renderQ('tool');}
+}
+
+// ============================================================
+// MUSIC PLAYER (Web Audio API)
+// ============================================================
+let actx=null,gainN=null,mpPlaying=false,mpCurTrack=0,mpElapsed=0,mpTimer=null,noteTimer=null,noteIdx=0;
+const TRACKS=[
+  {title:'Ambient Study Vol. 1',artist:'Web Audio Synth',dur:120,notes:[261,293,329,392,440,523],tempo:.7},
+  {title:'Lo-Fi Focus Wave',    artist:'Web Audio Synth',dur:100,notes:[220,246,294,330,415,440],tempo:.55},
+  {title:'Tech Minimal Drift',  artist:'Web Audio Synth',dur:90, notes:[196,220,262,294,370,392],tempo:.9},
+];
+function fmt(s){return Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60;}
+function startSynth(ti){
+  stopSynth();
+  if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
+  gainN=actx.createGain();gainN.gain.value=(document.querySelector('.mp-vol input').value/100)*0.12;gainN.connect(actx.destination);
+  const t=TRACKS[ti];
+  function playNote(){
+    const osc=actx.createOscillator();const env=actx.createGain();
+    osc.connect(env);env.connect(gainN);
+    osc.frequency.value=t.notes[noteIdx%t.notes.length];osc.type='sine';
+    env.gain.setValueAtTime(0,actx.currentTime);env.gain.linearRampToValueAtTime(1,actx.currentTime+.1);env.gain.linearRampToValueAtTime(0,actx.currentTime+t.tempo*.85);
+    osc.start(actx.currentTime);osc.stop(actx.currentTime+t.tempo);noteIdx++;
+  }
+  playNote();noteTimer=setInterval(playNote,t.tempo*1000);
+}
+function stopSynth(){if(noteTimer)clearInterval(noteTimer);if(gainN){try{gainN.disconnect();}catch(e){}}}
+function mpToggle(){
+  if(mpPlaying){mpPlaying=false;stopSynth();clearInterval(mpTimer);document.getElementById('mpPlay').innerHTML='&#x25B6;';}
+  else{mpPlaying=true;if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();startSynth(mpCurTrack);document.getElementById('mpPlay').innerHTML='&#x23F8;';
+    mpTimer=setInterval(()=>{mpElapsed++;if(mpElapsed>=TRACKS[mpCurTrack].dur){mpElapsed=0;mpNext();return;}
+      document.getElementById('mpFill').style.width=(mpElapsed/TRACKS[mpCurTrack].dur*100)+'%';
+      document.getElementById('mpCur').textContent=fmt(mpElapsed);
+      document.getElementById('mpTot').textContent=fmt(TRACKS[mpCurTrack].dur);
+    },1000);
+  }
+}
+function mpPrev(){mpElapsed=0;mpCurTrack=(mpCurTrack-1+TRACKS.length)%TRACKS.length;updateMPUI();if(mpPlaying){stopSynth();startSynth(mpCurTrack);}}
+function mpNext(){mpElapsed=0;mpCurTrack=(mpCurTrack+1)%TRACKS.length;updateMPUI();if(mpPlaying){stopSynth();startSynth(mpCurTrack);}}
+function mpVol(v){if(gainN)gainN.gain.value=(v/100)*.12;}
+function mpSeek(e){const bar=document.getElementById('mpBar');mpElapsed=Math.floor((e.offsetX/bar.clientWidth)*TRACKS[mpCurTrack].dur);}
+function updateMPUI(){
+  const t=TRACKS[mpCurTrack];
+  document.getElementById('mpTitle').textContent=t.title;document.getElementById('mpArtist').textContent=t.artist+' • Royalty-Free';
+  document.getElementById('mpTot').textContent=fmt(t.dur);document.getElementById('mpFill').style.width='0%';document.getElementById('mpCur').textContent='0:00';
+  document.querySelectorAll('.mp-trk').forEach((el,i)=>el.classList.toggle('active',i===mpCurTrack));
+}
+(function(){
+  const pl=document.getElementById('mpList');
+  pl.innerHTML=TRACKS.map((t,i)=>'<div class="mp-trk'+(i===0?' active':'')+'" onclick="mpCurTrack='+i+';mpElapsed=0;updateMPUI();if(mpPlaying){stopSynth();startSynth('+i+');}"><span class="mp-trk-n">'+(i+1)+'</span><div style="flex:1"><div>'+t.title+'</div><div style="font-size:.7rem;color:var(--g500)">Web Audio Synth</div></div><span class="mp-trk-dur">'+fmt(t.dur)+'</span></div>').join('');
+  updateMPUI();
+})();
+
+// ============================================================
+// LEAFLET MAP
+// ============================================================
+const lmap=L.map('storageMap').setView([30,-30],2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>',maxZoom:18}).addTo(lmap);
+[
+  {lat:39.04,lng:-77.49,c:'#2563eb',t:'AWS US-East-1 Data Center',d:'Amazon Web Services primary data center in Ashburn, Virginia — one of the largest data center clusters in the world.'},
+  {lat:45.59,lng:-121.18,c:'#2563eb',t:'Google The Dalles Data Center',d:'Google data center on the Columbia River, Oregon. Uses hydroelectric power and river water for server cooling.'},
+  {lat:47.64,lng:-122.13,c:'#f59e0b',t:'Microsoft Azure HQ',d:'Microsoft headquarters and Azure cloud storage platform. Azure serves millions of businesses with cloud storage globally.'},
+  {lat:37.36,lng:-122.03,c:'#f59e0b',t:'Apple (iCloud / App Store)',d:'Apple headquarters in Cupertino, CA. iCloud stores user photos, files, and device backups for billions of Apple devices.'},
+  {lat:40.84,lng:-74.28,c:'#10b981',t:'Caldwell University — CS 125',d:'Caldwell University in Caldwell, NJ. Home of CS 125, the course for which this Digital Storage portfolio was created by Maya Manzi.'},
+  {lat:41.88,lng:-87.63,c:'#8b5cf6',t:'Chicago Internet Exchange',d:'Major peering point where ISPs and cloud providers exchange traffic enabling fast data access across the Midwest US.'},
+  {lat:51.51,lng:-0.12,c:'#2563eb',t:'London Docklands (LD4)',d:'Europe's largest data center campus in East London. Hosts Equinix, Telehouse, and many cloud storage providers.'},
+  {lat:1.35,lng:103.82,c:'#2563eb',t:'Singapore Data Center Hub',d:'Singapore is Asia's primary cloud storage and data center hub, hosting major facilities for AWS, Google, Microsoft, and Alibaba Cloud.'},
+  {lat:37.77,lng:-122.42,c:'#f59e0b',t:'Dropbox HQ (San Francisco)',d:'Dropbox headquarters. One of the world's most popular cloud file storage and sharing services with 700 million registered users.'},
+].forEach(m=>{
+  L.circleMarker([m.lat,m.lng],{radius:10,fillColor:m.c,color:'#fff',weight:2,opacity:1,fillOpacity:.85}).addTo(lmap).bindPopup('<strong>'+m.t+'</strong><br><span style="font-size:.8rem;color:#555">'+m.d+'</span>');
+});
+
+// ============================================================
+// WEATHER (Open-Meteo — Free, No API Key)
+// ============================================================
+const WMO={0:'Clear sky ☀️',1:'Mainly clear 🌤',2:'Partly cloudy ⛅',3:'Overcast ☁️',45:'Foggy 🌫',48:'Icy fog 🌫',51:'Light drizzle 🌦',53:'Moderate drizzle 🌦',55:'Dense drizzle 🌧',61:'Light rain 🌧',63:'Moderate rain 🌧',65:'Heavy rain 🌧',71:'Light snow 🌨',73:'Moderate snow 🌨',75:'Heavy snow 🌨',80:'Light showers 🌦',81:'Moderate showers 🌧',82:'Heavy showers ⛈',95:'Thunderstorm ⛈',96:'Thunderstorm+hail ⛈'};
+const WICO={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',51:'🌦',61:'🌧',65:'🌧',71:'🌨',80:'🌦',95:'⛈'};
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+async function doWeather(){
+  const city=document.getElementById('wxInput').value.trim();if(!city)return;
+  const el=document.getElementById('wxResult');
+  el.innerHTML='<div class="wx-loading"><div class="spinner"></div>Fetching weather for '+city+'...</div>';
+  try{
+    const gr=await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=en&format=json');
+    const gd=await gr.json();
+    if(!gd.results||!gd.results.length){el.innerHTML='<div class="wx-err">City not found. Try a different spelling or add country e.g. "London, UK".</div>';return;}
+    const{latitude,longitude,name,country,timezone}=gd.results[0];
+    const wr=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+latitude+'&longitude='+longitude+'&current_weather=true&hourly=relativehumidity_2m&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max,windspeed_10m_max&timezone=auto&forecast_days=5&windspeed_unit=mph');
+    const wd=await wr.json();
+    const cw=wd.current_weather;
+    const humid=wd.hourly.relativehumidity_2m[new Date().getHours()]||'--';
+    const cond=WMO[cw.weathercode]||'Unknown';
+    const fc=wd.daily.time.slice(0,5).map((d,i)=>{
+      const day=DAYS[new Date(d+'T12:00:00').getDay()];
+      const icon=WICO[wd.daily.weathercode[i]]||'🌡';
+      return '<div class="fc-card"><div class="fc-day">'+day+'</div><div class="fc-icon">'+icon+'</div><div><span class="fc-hi">'+Math.round(wd.daily.temperature_2m_max[i])+'&deg;</span> / <span class="fc-lo">'+Math.round(wd.daily.temperature_2m_min[i])+'&deg;</span></div><div style="font-size:.68rem;color:var(--blue3);margin-top:3px">'+wd.daily.precipitation_probability_max[i]+'% rain</div></div>';
+    }).join('');
+    el.innerHTML='<div class="wx-card"><div class="wx-city">'+name+', '+country+'</div><div style="font-size:.78rem;color:var(--g500)">'+timezone.replace('_',' ')+' &bull; Live data from Open-Meteo API</div><div class="wx-main"><div class="wx-temp">'+Math.round(cw.temperature)+'&deg;C</div><div><div class="wx-desc">'+cond+'</div><div style="font-size:.83rem;color:var(--g500);margin-top:3px">Wind: '+Math.round(cw.windspeed)+' mph</div></div></div><div class="wx-stats"><div class="ws"><strong>'+humid+'%</strong><span>Humidity</span></div><div class="ws"><strong>'+Math.round(cw.windspeed)+' mph</strong><span>Wind Speed</span></div><div class="ws"><strong>'+Math.round(wd.daily.temperature_2m_max[0])+'&deg; / '+Math.round(wd.daily.temperature_2m_min[0])+'&deg;</strong><span>Today High/Low</span></div></div></div><h4 style="margin-bottom:10px;font-size:.88rem;color:var(--g300)">5-Day Forecast</h4><div class="fc-grid">'+fc+'</div>';
+  }catch(e){el.innerHTML='<div class="wx-err">Could not load weather data. Check your internet connection and try again.</div>';}
+}
+document.getElementById('wxInput').value='New York';doWeather();
+
+// ============================================================
+// CHATBOT
+// ============================================================
+const KB=[
+  {k:['hdd','hard disk','hard drive','spinning'],r:'An HDD (Hard Disk Drive) stores data on spinning magnetic platters. A tiny read/write head moves across the surface to read and write data magnetically. HDDs offer the most storage for the lowest cost — great for bulk archives and backups. Typical speeds are 80–160 MB/s.'},
+  {k:['sata ssd','sata solid','sata drive'],r:'A SATA SSD stores data in NAND flash chips with no moving parts. Much faster (~550 MB/s), quieter, and more durable than HDDs. SATA SSDs are the most popular laptop upgrade — a direct drop-in replacement for an HDD using the same cable.'},
+  {k:['nvme','m.2','pcie','fastest ssd'],r:'NVMe SSDs use the PCIe interface instead of SATA, reaching 3,500–7,000 MB/s — up to 13x faster than SATA SSDs. They come in the small M.2 form factor. Used in gaming PCs, professional workstations, and all modern laptops.'},
+  {k:['ssd','solid state','flash memory','nand'],r:'SSDs (Solid State Drives) store data in NAND flash memory chips with no moving parts. They are faster, quieter, more durable, and use less power than HDDs. SATA SSDs reach ~550 MB/s while NVMe SSDs exceed 7,000 MB/s.'},
+  {k:['usb','flash drive','thumb drive','pen drive'],r:'USB flash drives are small portable storage devices using flash memory. Cheap USB 2.0 drives are slow (15 MB/s). Fast USB 3.2 drives can reach 400 MB/s. Great for carrying files between devices.'},
+  {k:['cloud','google drive','onedrive','dropbox','icloud'],r:'Cloud storage saves your files on remote servers accessed via the internet. Google Drive gives 15GB free, iCloud 5GB, OneDrive 5GB, Dropbox 2GB. Cloud storage is accessible from any device and includes built-in redundancy.'},
+  {k:['hdd vs ssd','difference between hdd','compare hdd','hdd or ssd'],r:'HDD vs SSD: SSDs are 3–40x faster, silent, more durable (no moving parts), and use less power. HDDs are cheaper per GB and offer higher maximum capacities. Use an SSD for your OS and apps, an HDD for bulk storage.'},
+  {k:['sd card','memory card','microsd','sdxc'],r:'SD cards are small flash memory cards used in cameras, phones, drones, and game consoles. Speed classes: Class 10/UHS-I up to 104 MB/s, UHS-II up to 312 MB/s. Choose based on your camera's video recording requirements.'},
+  {k:['optical','blu-ray','dvd','cd','disc'],r:'Optical storage uses a laser to read/write data. CDs hold 700MB, DVDs 4.7–17GB, Blu-ray 25–100GB. Archival-grade discs last 100+ years — excellent for long-term data preservation.'},
+  {k:['backup','back up','3-2-1','data loss'],r:'The 3-2-1 backup rule: 3 copies of your data, on 2 different media types, with 1 copy offsite. This protects against ransomware, theft, fire, and hardware failure. Use cloud storage as your offsite backup.'},
+  {k:['encrypt','encryption','aes','secure'],r:'Encryption scrambles data so only authorized users can read it. AES-256 is the gold standard used by banks and governments. Windows BitLocker and macOS FileVault can encrypt your entire drive for free.'},
+  {k:['gaming','game','gaming storage'],r:'For gaming: NVMe SSD (1–2TB) dramatically reduces load times. Pair with a large HDD (2–4TB) for your full game library. PS5 and Xbox Series X both use custom NVMe drives for fast level streaming.'},
+  {k:['how much storage','how many gb','storage size'],r:'How much storage: Schoolwork only: 256GB SSD. General use: 512GB SSD. Gaming: 1TB+ NVMe. Photography/video: 2TB+ plus external HDD. Professional video editing: 4TB+ NVMe RAID.'},
+  {k:['cost','price','expensive','cheap'],r:'Storage costs (2024): HDD ~$20/TB, SATA SSD ~$60/TB, NVMe SSD ~$80/TB, USB Flash ~$100/TB, Memory Card ~$120/TB, Cloud $2–10/month per TB.'},
+  {k:['capacity','tb','gb','terabyte','gigabyte'],r:'1 KB = 1,024 bytes. 1 MB = 1,024 KB. 1 GB = 1,024 MB. 1 TB = 1,024 GB. A typical photo is 4–8 MB, a 4K movie is 60–100 GB, a song is about 5 MB. 1TB holds roughly 250,000 photos.'},
+  {k:['hello','hi','hey','help','what can you'],r:'Hello! I'm StorageBot. I can explain HDD vs SSD, NVMe, cloud storage, USB drives, memory cards, data backup, encryption, and help you choose the right storage for your needs. What would you like to know?'},
+  {k:['thank','thanks','great','perfect','good'],r:'You're very welcome! Feel free to ask more questions about digital storage, data backup, or choosing the right storage for your specific needs. Happy studying for CS 125!'},
+];
+function getBotReply(q){
+  const lq=q.toLowerCase();
+  for(const e of KB){if(e.k.some(k=>lq.includes(k)))return e.r;}
+  return 'Great question about "'+q.substring(0,40)+'...". I specialize in: HDD, SSD, NVMe, USB drives, cloud storage, backup, and encryption. Try asking "How does an SSD work?" or "What is cloud storage?"';
+}
+function tnow(){const d=new Date();return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+const chatWin=document.getElementById('chatWin');
+function addMsg(txt,isUser){
+  const m=document.createElement('div');m.className='chat-msg '+(isUser?'user':'bot');
+  m.innerHTML='<div class="chat-mav">'+(isUser?'👤':'🤖')+'</div><div><div class="chat-bbl">'+txt+'</div><div class="chat-t">'+tnow()+'</div></div>';
+  chatWin.appendChild(m);chatWin.scrollTop=chatWin.scrollHeight;
+}
+function showTyp(){
+  const t=document.createElement('div');t.className='chat-msg bot';t.id='typMsg';
+  t.innerHTML='<div class="chat-mav">🤖</div><div class="chat-bbl"><div class="td-wrap"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>';
+  chatWin.appendChild(t);chatWin.scrollTop=chatWin.scrollHeight;
+}
+function hideTyp(){const t=document.getElementById('typMsg');if(t)t.remove();}
+function sendChat(q){
+  if(!q||!q.trim())return;
+  addMsg(q,true);document.getElementById('chatTi').value='';
+  showTyp();setTimeout(()=>{hideTyp();addMsg(getBotReply(q),false);},650+Math.random()*350);
+}
+function sendChatInput(){sendChat(document.getElementById('chatTi').value.trim());}
+function clearChat(){chatWin.innerHTML='';addMsg('Chat cleared! Ask me anything about digital storage.',false);}
+addMsg('Hi! I'm StorageBot, your CS 125 Digital Storage assistant. I can explain HDD vs SSD, cloud storage, data backup, encryption, and help you choose the right storage for your needs. What would you like to know?',false);
+</script>
+</body>
+</html>
